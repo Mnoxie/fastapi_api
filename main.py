@@ -57,3 +57,16 @@ def delete_product(product_id: int, db: Session = Depends(get_db)):
     db.delete(db_product)
     db.commit()
     return {"message": "Producto eliminado correctamente"}
+
+
+
+
+# Endpoints categoria
+@app.get("/products/category/{category_id}", response_model=List[ProductSchema])
+def get_products_by_category(category_id: int, db: Session = Depends(get_db)):
+    products = db.query(Product).filter(Product.category_id == category_id).all()
+    if not products:
+        raise HTTPException(status_code=404, detail="No se encontraron productos para esta categoría")
+    return products
+
+
